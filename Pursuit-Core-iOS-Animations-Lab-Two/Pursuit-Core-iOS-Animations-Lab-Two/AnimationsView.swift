@@ -125,7 +125,17 @@ class AnimationsView: UIView {
     
     @objc
     private func resetButtonPressed(){
-        
+        let animationDistance: CGFloat = self.bounds.height * 0.6
+            
+        for (index, object) in self.objects.enumerated(){
+
+            UIView.transition(with: object, duration: 1, options: self.indexToAnimOptions(index: index), animations: {
+                [unowned self] in
+                object.constraintsAffectingLayout(for: .vertical)[2].constant -= animationDistance
+                self.layoutIfNeeded()
+            }, completion: nil)
+            
+        }
     }
     
     @objc private func animateButtonPressed(){
