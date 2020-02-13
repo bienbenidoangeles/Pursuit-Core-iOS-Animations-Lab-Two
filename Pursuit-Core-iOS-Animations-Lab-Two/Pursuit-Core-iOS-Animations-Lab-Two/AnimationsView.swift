@@ -136,6 +136,8 @@ class AnimationsView: UIView {
             }, completion: nil)
             
         }
+        resetButton.isEnabled.toggle()
+        animateButton.isEnabled.toggle()
     }
     
     @objc private func animateButtonPressed(){
@@ -151,6 +153,9 @@ class AnimationsView: UIView {
             }, completion: nil)
             
         }
+        
+        resetButton.isEnabled.toggle()
+        animateButton.isEnabled.toggle()
     }
     
     private func indexToAnimOptions(index: Int) -> UIView.AnimationOptions{

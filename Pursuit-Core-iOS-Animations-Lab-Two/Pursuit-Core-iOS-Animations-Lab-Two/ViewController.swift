@@ -12,6 +12,9 @@ class ViewController: UIViewController {
     
     let animationsView = AnimationsView()
     
+    lazy var animateButton = animationsView.animateButton
+    lazy var resetButton = animationsView.resetButton
+    
     override func loadView() {
         view = animationsView
     }
@@ -19,6 +22,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        resetButton.isEnabled = false
     }
 
 }
