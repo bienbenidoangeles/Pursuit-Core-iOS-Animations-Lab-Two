@@ -55,22 +55,29 @@ class AnimationsView: UIView {
     }()
     
     lazy var object1: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "beach-ball"))
+        let width = self.bounds.width * 0.2
+        
+        let imageView = UIImageView(image: UIImage(named: "beach-ball")?.resizeImage(to: width, height: width))
         return imageView
     }()
     
     lazy var object2: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "beach-ball"))
+        let width = self.bounds.width * 0.2
+        let imageView = UIImageView(image: UIImage(named: "beach-ball")?.resizeImage(to: width, height: width))
         return imageView
     }()
     
     lazy var object3: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "beach-ball"))
+        let width = self.bounds.width * 0.2
+
+        let imageView = UIImageView(image: UIImage(named: "beach-ball")?.resizeImage(to: width, height: width))
         return imageView
     }()
     
     lazy var object4: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "beach-ball"))
+        let width = self.bounds.width * 0.2
+
+        let imageView = UIImageView(image: UIImage(named: "beach-ball")?.resizeImage(to: width, height: width))
         return imageView
     }()
     
@@ -123,6 +130,22 @@ class AnimationsView: UIView {
     
     @objc private func animateButtonPressed(){
         
+        let animationDistance: CGFloat = self.bounds.height * 0.6
+            
+        for (index, object) in self.objects.enumerated(){
+
+            UIView.transition(with: object, duration: 5, options: self.indexToAnimOptions(index: index), animations: {
+                [unowned self] in
+                object.constraintsAffectingLayout(for: .vertical)[2].constant += animationDistance
+                self.layoutIfNeeded()
+            }, completion: nil)
+            
+        }
+    }
+    
+    private func indexToAnimOptions(index: Int) -> UIView.AnimationOptions{
+        let options = [UIView.AnimationOptions.curveLinear, AnimationOptions.curveEaseIn, AnimationOptions.curveEaseOut, AnimationOptions.curveEaseInOut]
+        return options[index]
     }
     
     private func commonInit(){
@@ -143,18 +166,15 @@ class AnimationsView: UIView {
     }
     
     private func setupObjectsConstraints(){
-        objects.forEach{addSubview($0); $0.translatesAutoresizingMaskIntoConstraints = false;        }
-        
+        objects.forEach{addSubview($0); $0.translatesAutoresizingMaskIntoConstraints = false;}
         for (index, object) in objects.enumerated(){
-            
             NSLayoutConstraint.activate([
-                object.topAnchor.constraint(equalTo: stackView.subviews[index].centerYAnchor, constant: 20),
+                object.centerYAnchor.constraint(equalTo: stackView.subviews[index].centerYAnchor, constant: object.frame.height),
                 object.centerXAnchor.constraint(equalTo: stackView.subviews[index].centerXAnchor),
                 object.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
                 object.widthAnchor.constraint(equalTo: object.heightAnchor, multiplier: 1)
             ])
         }
-        
     }
     
     private func setupToolBarConstraints(){
@@ -165,5 +185,15 @@ class AnimationsView: UIView {
             toolBar.trailingAnchor.constraint(equalTo: trailingAnchor),
             toolBar.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+}
+
+extension UIImage {
+    func resizeImage(to width: CGFloat, height: CGFloat) -> UIImage {
+        let size = CGSize(width: width, height: height)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { (context) in
+            self.draw(in: CGRect(origin: .zero, size: size))
+        }
     }
 }
